@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import PersonList from "./components/PersonList";
+import Header from "./components/Header";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      players: [],
+      darkMode: false
+    };
+  }
+
+  setDarkMode = (darkMode) => {
+    this.setState({darkMode: darkMode});
+  };
+
+  componentDidMount() {
+    axios.get("http://localhost:5000/api/players")
+      .then(({data}) => this.setState({players: data}))
+      .catch(e => console.log(e));
+  }
+
+  render() {
+    return (
+      <div>
+        <Header setDarkMode={this.setDarkMode} />
+        <PersonList data={this.state.players} darkMode={this.state.darkMode} />
+      </div>
+    );
+  }
 }
 
 export default App;
